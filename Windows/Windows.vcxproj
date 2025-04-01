@@ -103,6 +103,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\dev\Mesen2\Windows\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -178,6 +179,11 @@
     <ClInclude Include="DirectXTK\common.h" />
     <ClInclude Include="DirectXTK\PlatformHelpers.h" />
     <ClInclude Include="DirectXTK\SharedResourcePool.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="XInputManager.h" />
     <ClInclude Include="WindowsKeyManager.h" />
     <ClInclude Include="Renderer.h" />
@@ -191,6 +197,13 @@
     <ClCompile Include="DirectXTK\CommonStates.cpp" />
     <ClCompile Include="DirectXTK\SpriteBatch.cpp" />
     <ClCompile Include="DirectXTK\VertexTypes.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="XInputManager.cpp" />
     <ClCompile Include="WindowsKeyManager.cpp">
       <DeploymentContent>false</DeploymentContent>
