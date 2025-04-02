@@ -74,6 +74,9 @@ private:
 
 	HRESULT InitDevice();
 	void CleanupDevice();
+	
+	void InitImGui();
+	void RenderImGui();
 
 	void SetScreenSize(uint32_t width, uint32_t height);
 
