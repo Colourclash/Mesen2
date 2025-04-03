@@ -640,6 +640,13 @@ void Renderer::RenderImGui()
 	static bool show_demo_window = true;
 	static bool show_another_window = false;
 
+	// I don't know if it's bad to do this here...
+	MSG msg;
+	while(::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
+		::TranslateMessage(&msg);
+		::DispatchMessage(&msg);
+	}
+
 	// Start the Dear ImGui frame
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -691,10 +698,11 @@ void Renderer::RenderImGui()
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	// Update and Render additional Platform Windows
-	//if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+	ImGuiIO& io = ImGui::GetIO();
+	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
-	//}
+	}
 }
 
 void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
