@@ -162,7 +162,18 @@ void Renderer::InitImGui()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+	
+	// with this enabled, we dont get imgui windows rendered after the emulator state is resumed.
+	// with this disabled, we see the imgui windows draw on the emulator window surface. 
+	// only thing is, the imgui gui doesnt respond to mouse clicks.
+	// it does respond to mouse over events though
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+	
+	// todo: try this
+	// ImGui_ImplWin32_EnableDpiAwareness
+	 
+	// temp
+	io.FontGlobalScale = 2.0f;
 	//io.ConfigViewportsNoAutoMerge = true;
 	//io.ConfigViewportsNoTaskBarIcon = true;
 	//io.ConfigViewportsNoDefaultParent = true;
@@ -635,11 +646,14 @@ void Renderer::DrawHud(HudRenderInfo& hud, RenderSurfaceInfo& hudSurface)
 	_spriteBatch->Draw(hud.Shader, destRect);
 }
 
+#include "Shared/DebuggerRequest.h"
+
 void Renderer::RenderImGui()
 {
-	static bool show_demo_window = true;
-	static bool show_another_window = false;
+	static bool show_demo_window = false;
 
+	// Without this imgui gui won't respond to mouse clicks.
+	// It only seems to work when ImGuiConfigFlags_ViewportsEnable is set.
 	// I don't know if it's bad to do this here...
 	MSG msg;
 	while(::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
@@ -656,49 +670,35 @@ void Renderer::RenderImGui()
 	if(show_demo_window)
 		ImGui::ShowDemoWindow(&show_demo_window);
 
-	// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+	ImGui::Begin("Registers");
+
+	DebuggerRequest req = _emu->GetDebugger(false);
+	Debugger* dbg = req.GetDebugger();
+	if(dbg) 
 	{
-		static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-		ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-		ImGui::Checkbox("Another Window", &show_another_window);
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		//ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		if(ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
-		//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-		ImGui::End();
+		// dbg is only set if debugger window is open
+		ImGui::Text("PC: %x", dbg->GetProgramCounter(CpuType::Pce, true));
 	}
 
-	// 3. Show another simple window.
-	if(show_another_window) {
-		ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-		ImGui::Text("Hello from another window!");
-		if(ImGui::Button("Close Me"))
-			show_another_window = false;
-		ImGui::End();
-	}
+	//ImGui::Text("counter = %d", counter);
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+	ImGui::End();
 
-	// Rendering
-	ImGui::Render();
 	//const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 	
+	// Rendering
+	ImGui::Render();
 	// ?
 	//g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
 	//g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	// Update and Render additional Platform Windows
-	ImGuiIO& io = ImGui::GetIO();
+	
+	// with ImGuiConfigFlags_ViewportsEnable set we get an empty/black screen for the emulator window.
+	// imgui windows will be displayed up to the point the emulator is started/resumed. then they disappear.
+	// the imgui windows are shown in separate windows to the emulator window.
 	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
@@ -724,18 +724,18 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 	VideoConfig cfg = _emu->GetSettings()->GetVideoConfig();
 
 	// Clear the back buffer 
-	_pDeviceContext->ClearRenderTargetView(_pRenderTargetView, Colors::Black);
+	_pDeviceContext->ClearRenderTargetView(_pRenderTargetView, Colors::Cyan);
 
 	//Draw screen
-	_spriteBatch->Begin(SpriteSortMode_Immediate, cfg.UseBilinearInterpolation);
-	DrawScreen();
-	_spriteBatch->End();
+	//_spriteBatch->Begin(SpriteSortMode_Immediate, cfg.UseBilinearInterpolation);
+	//DrawScreen();
+	//_spriteBatch->End();
 
 	//Draw HUD
-	_spriteBatch->Begin(SpriteSortMode_Immediate, false);
-	DrawHud(_scriptHud, scriptHud);
-	DrawHud(_emuHud, emuHud);
-	_spriteBatch->End();
+	//_spriteBatch->Begin(SpriteSortMode_Immediate, false);
+	//DrawHud(_scriptHud, scriptHud);
+	//DrawHud(_emuHud, emuHud);
+	//_spriteBatch->End();
 
 	RenderImGui();
 

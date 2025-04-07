@@ -1203,7 +1203,7 @@
       <SDLCheck>true</SDLCheck>
       <InlineFunctionExpansion>
       </InlineFunctionExpansion>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <CallingConvention>Cdecl</CallingConvention>
       <AdditionalIncludeDirectories>
