@@ -66,7 +66,7 @@ extern "C"
 			_historyRenderer.reset(new SoftwareRenderer(_historyPlayer.get()));
 		} else {
 			#ifdef _WIN32
-				_historyRenderer.reset(new Renderer(_historyPlayer.get(), (HWND)viewerHandle));
+				_historyRenderer.reset(new Renderer(_historyPlayer.get(), (HWND)viewerHandle, nullptr));
 			#elif __APPLE__
 				_historyRenderer.reset(new SoftwareRenderer(_historyPlayer.get()));
 			#else

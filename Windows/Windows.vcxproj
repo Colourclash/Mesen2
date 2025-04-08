@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnalyserUI\AnalyserUI.h" />
     <ClInclude Include="DirectInputManager.h" />
     <ClInclude Include="DirectXTK\BufferHelpers.h" />
     <ClInclude Include="DirectXTK\CommonStates.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Common.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnalyserUI\AnalyserUI.cpp" />
     <ClCompile Include="DirectInputManager.cpp" />
     <ClCompile Include="DirectXTK\BufferHelpers.cpp" />
     <ClCompile Include="DirectXTK\CommonStates.cpp" />

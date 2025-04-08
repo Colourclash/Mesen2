@@ -10,6 +10,7 @@
 using namespace DirectX;
 
 class Emulator;
+class AnalyserUI;
 
 namespace DirectX {
 	class SpriteBatch;
@@ -27,6 +28,7 @@ class Renderer final : public IRenderingDevice
 {
 private:
 	Emulator* _emu;
+	AnalyserUI* _analyserUI;
 
 	HWND _hWnd = nullptr;
 
@@ -95,7 +97,7 @@ private:
 	DXGI_FORMAT GetTextureFormat();
 
 public:
-	Renderer(Emulator* emu, HWND hWnd);
+	Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI);
 	~Renderer();
 
 	void SetExclusiveFullscreenMode(bool fullscreen, void* windowHandle) override;

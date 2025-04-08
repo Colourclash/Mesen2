@@ -24,6 +24,7 @@
 	#include "Windows/SoundManager.h"
 	#include "Windows/WindowsKeyManager.h"
 	#include "Windows/WindowsMouseManager.h"
+	#include "Windows/AnalyserUI/AnalyserUI.h"
 #elif __APPLE__
 	#include "Sdl/SdlSoundManager.h"
 	#include "MacOS/MacOSKeyManager.h"
@@ -41,6 +42,7 @@ unique_ptr<IRenderingDevice> _renderer;
 unique_ptr<IAudioDevice> _soundManager;
 unique_ptr<IKeyManager> _keyManager;
 unique_ptr<IMouseManager> _mouseManager;
+unique_ptr<AnalyserUI> _analyserUI;
 unique_ptr<Emulator> _emu(new Emulator());
 bool _softwareRenderer = false;
 
@@ -91,7 +93,8 @@ extern "C" {
 					_renderer.reset(new SoftwareRenderer(_emu.get()));
 				} else {
 					#ifdef _WIN32
-						_renderer.reset(new Renderer(_emu.get(), (HWND)_viewerHandle));
+						_analyserUI.reset(new AnalyserUI(_emu.get()));
+						_renderer.reset(new Renderer(_emu.get(), (HWND)_viewerHandle, _analyserUI.get()));
 					#elif __APPLE__
 						_renderer.reset(new SoftwareRenderer(_emu.get()));
 					#else

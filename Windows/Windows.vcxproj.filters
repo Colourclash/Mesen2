@@ -15,6 +15,9 @@
     <Filter Include="Source Files\imgui\backends">
       <UniqueIdentifier>{05e60544-bb69-4d71-bbb5-347e676c28a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AnalyserUI">
+      <UniqueIdentifier>{cfad1261-ec6b-4ee2-84a2-acbcafcba004}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -83,6 +86,9 @@
     <ClInclude Include="imgui\backends\imgui_impl_win32.h">
       <Filter>Source Files\imgui\backends</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyserUI\AnalyserUI.h">
+      <Filter>Source Files\AnalyserUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -135,6 +141,9 @@
     </ClCompile>
     <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
       <Filter>Source Files\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\AnalyserUI.cpp">
+      <Filter>Source Files\AnalyserUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
