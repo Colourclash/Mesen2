@@ -11,12 +11,12 @@
 #include "AnalyserUI/AnalyserUI.h"
 
 using namespace DirectX;
+extern CRITICAL_SECTION _d3dCriticalSection;
 
-Renderer::Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI)
+Renderer::Renderer(Emulator* emu, HWND hWnd)
 {
 	_emu = emu;
 	_hWnd = hWnd;
-	_analyserUI = analyserUI;
 
 	SetScreenSize(256, 224);
 }
@@ -158,9 +158,6 @@ void Renderer::Reset()
 	if(FAILED(InitDevice())) {
 		CleanupDevice();
 	} else {
-		if(_analyserUI) {
-			_analyserUI->Init(_hWnd, _pd3dDevice, _pDeviceContext);
-		}
 		_emu->GetVideoRenderer()->RegisterRenderingDevice(this);
 	}
 
@@ -169,6 +166,8 @@ void Renderer::Reset()
 
 void Renderer::CleanupDevice()
 {
+	EnterCriticalSection(&_d3dCriticalSection);
+
 	ResetTextureBuffers();
 	ReleaseRenderTargetView();
 	if(_pSwapChain) {
@@ -200,6 +199,8 @@ void Renderer::CleanupDevice()
 		_scriptHud.Shader->Release();
 		_scriptHud.Shader = nullptr;
 	}
+
+	LeaveCriticalSection(&_d3dCriticalSection);
 }
 
 void Renderer::ResetTextureBuffers()
@@ -229,11 +230,14 @@ void Renderer::ReleaseRenderTargetView()
 
 HRESULT Renderer::CreateRenderTargetView()
 {
+	EnterCriticalSection(&_d3dCriticalSection);
+
 	// Create a render target view
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	HRESULT hr = _pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	if(FAILED(hr)) {
 		MessageManager::Log("SwapChain::GetBuffer() failed - Error:" + std::to_string(hr));
+		//leave critical section?
 		return hr;
 	}
 
@@ -241,16 +245,21 @@ HRESULT Renderer::CreateRenderTargetView()
 	pBackBuffer->Release();
 	if(FAILED(hr)) {
 		MessageManager::Log("D3DDevice::CreateRenderTargetView() failed - Error:" + std::to_string(hr));
+		//leave critical section?
 		return hr;
 	}
 
 	_pDeviceContext->OMSetRenderTargets(1, &_pRenderTargetView, nullptr);
+
+	LeaveCriticalSection(&_d3dCriticalSection);
 
 	return S_OK;
 }
 
 HRESULT Renderer::CreateEmuTextureBuffers()
 {
+	EnterCriticalSection(&_d3dCriticalSection);
+
 	// Setup the viewport
 	D3D11_VIEWPORT vp;
 	vp.Width = (FLOAT)_realScreenWidth;
@@ -278,6 +287,8 @@ HRESULT Renderer::CreateEmuTextureBuffers()
 	////////////////////////////////////////////////////////////////////////////
 	_spriteBatch.reset(new SpriteBatch(_pDeviceContext));
 
+	LeaveCriticalSection(&_d3dCriticalSection);
+
 	return S_OK;
 }
 
@@ -286,6 +297,8 @@ HRESULT Renderer::CreateEmuTextureBuffers()
 //--------------------------------------------------------------------------------------
 HRESULT Renderer::InitDevice()
 {
+	// critical section here?
+
 	HRESULT hr = S_OK;
 
 	UINT createDeviceFlags = 0;
@@ -440,6 +453,7 @@ ID3D11ShaderResourceView* Renderer::GetShaderResourceView(ID3D11Texture2D* textu
 
 void Renderer::ClearFrame()
 {
+
 	//Clear current output and display black frame
 	auto lock = _textureLock.AcquireSafe();
 	if(_textureBuffer[0]) {
@@ -600,26 +614,24 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 			return;
 		}
 	}
+	EnterCriticalSection(&_d3dCriticalSection);
 
 	VideoConfig cfg = _emu->GetSettings()->GetVideoConfig();
 
 	// Clear the back buffer 
 	_pDeviceContext->ClearRenderTargetView(_pRenderTargetView, Colors::Cyan);
+	_pDeviceContext->OMSetRenderTargets(1, &_pRenderTargetView, nullptr);
 
 	//Draw screen
-	//_spriteBatch->Begin(SpriteSortMode_Immediate, cfg.UseBilinearInterpolation);
-	//DrawScreen();
-	//_spriteBatch->End();
+	_spriteBatch->Begin(SpriteSortMode_Immediate, cfg.UseBilinearInterpolation);
+	DrawScreen();
+	_spriteBatch->End();
 
 	//Draw HUD
-	//_spriteBatch->Begin(SpriteSortMode_Immediate, false);
-	//DrawHud(_scriptHud, scriptHud);
-	//DrawHud(_emuHud, emuHud);
-	//_spriteBatch->End();
-
-	if(_analyserUI) {
-		_analyserUI->Draw();
-	}
+	_spriteBatch->Begin(SpriteSortMode_Immediate, false);
+	DrawHud(_scriptHud, scriptHud);
+	DrawHud(_emuHud, emuHud);
+	_spriteBatch->End();
 
 	// Present the information rendered to the back buffer to the front buffer (the screen)
 	HRESULT hr = _pSwapChain->Present(cfg.VerticalSync ? 1 : 0, 0);
@@ -631,4 +643,6 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 		MessageManager::Log("Trying to reset DX...");
 		Reset();
 	}
+
+	LeaveCriticalSection(&_d3dCriticalSection);
 }

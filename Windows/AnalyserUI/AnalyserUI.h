@@ -9,16 +9,26 @@ class AnalyserUI final : public IAnalyserUI
 private:
 	Emulator* _emu = nullptr;
 
-	// todo shutdown
+	atomic<bool> _stopFlag;
+	unique_ptr<std::thread> _thread;
 
+	// todo shutdown
+	
+	HWND _hWndParent = nullptr;
 public:
-	AnalyserUI(Emulator* emu);
+	// todo: make this platform agnostic
+	AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, SimpleLock* pD3dLock);
 	~AnalyserUI();
 
-	// todo: make this platform agnostic
-	void Init(HWND hWnd, ID3D11Device* _pd3dDevice, ID3D11DeviceContext* _pDeviceContext);
+	void StartThread();
+	void StopThread();
+
+	void ThreadFunc();
+
+	bool Init();
 
 	// IAnalyserUI
 	virtual void Draw() override;
 	// ~IAnalyserUI
+
 };
