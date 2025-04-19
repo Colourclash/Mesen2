@@ -28,6 +28,7 @@ class Renderer final : public IRenderingDevice
 {
 private:
 	Emulator* _emu;
+	AnalyserUI* _analyserUI = nullptr;
 
 	HWND _hWnd = nullptr;
 
@@ -93,11 +94,12 @@ private:
 	DXGI_FORMAT GetTextureFormat();
 
 public:
-	Renderer(Emulator* emu, HWND hWnd);
+	Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI);
 	~Renderer();
 
 	ID3D11Device* GetD3dDevice() const { return _pd3dDevice; }
 	ID3D11DeviceContext* GetD3dDeviceContext() const { return _pDeviceContext; }
+	void SetAnalyserUI(AnalyserUI* analyserUI) { _analyserUI = analyserUI;  }
 
 	void SetExclusiveFullscreenMode(bool fullscreen, void* windowHandle) override;
 
@@ -106,4 +108,6 @@ public:
 	void ClearFrame() override;
 
 	void UpdateFrame(RenderedFrame& frame) override;
+
+	void OnRendererThreadStarted() override;
 };

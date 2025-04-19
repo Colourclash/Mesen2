@@ -13,10 +13,11 @@
 using namespace DirectX;
 extern CRITICAL_SECTION _d3dCriticalSection;
 
-Renderer::Renderer(Emulator* emu, HWND hWnd)
+Renderer::Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI)
 {
 	_emu = emu;
 	_hWnd = hWnd;
+	_analyserUI = analyserUI;
 
 	SetScreenSize(256, 224);
 }
@@ -158,6 +159,7 @@ void Renderer::Reset()
 	if(FAILED(InitDevice())) {
 		CleanupDevice();
 	} else {
+		// this starts the render thread if it is not running
 		_emu->GetVideoRenderer()->RegisterRenderingDevice(this);
 	}
 
@@ -599,8 +601,15 @@ void Renderer::DrawHud(HudRenderInfo& hud, RenderSurfaceInfo& hudSurface)
 	_spriteBatch->Draw(hud.Shader, destRect);
 }
 
+//bool bInitAnalyser = false;
+
 void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 {
+	/*if(!bInitAnalyser) {
+		_analyserUI->Init(_pd3dDevice, _pDeviceContext);
+		bInitAnalyser = true;
+	}*/
+
 	auto lock = _frameLock.AcquireSafe();
 	if(_newFullscreen != _fullscreen) {
 		SetScreenSize(_emuFrameWidth, _emuFrameHeight);
@@ -645,4 +654,13 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 	}
 
 	LeaveCriticalSection(&_d3dCriticalSection);
+
+	if(_analyserUI) {
+		_analyserUI->Draw();
+	}
+}
+
+void Renderer::OnRendererThreadStarted()
+{
+	//_analyserUI->Init(_pd3dDevice, _pDeviceContext);
 }

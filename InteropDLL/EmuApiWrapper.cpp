@@ -97,9 +97,10 @@ extern "C" {
 				} else {
 					#ifdef _WIN32
 						InitializeCriticalSection(&_d3dCriticalSection);
-						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle);
+						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle, nullptr /*_analyserUI.get()*/);
 						_analyserUI.reset(new AnalyserUI(_emu.get(), (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext()));
 						_analyserUI.get()->StartThread();
+						pRenderer->SetAnalyserUI(_analyserUI.get());
 						_renderer.reset(pRenderer);
 					#elif __APPLE__
 						_renderer.reset(new SoftwareRenderer(_emu.get()));

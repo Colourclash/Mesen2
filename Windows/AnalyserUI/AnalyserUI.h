@@ -17,7 +17,7 @@ private:
 	HWND _hWndParent = nullptr;
 public:
 	// todo: make this platform agnostic
-	AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, SimpleLock* pD3dLock);
+	AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext);
 	~AnalyserUI();
 
 	void StartThread();
@@ -25,10 +25,12 @@ public:
 
 	void ThreadFunc();
 
-	bool Init();
+	bool Init(/*ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext*/);
 
 	// IAnalyserUI
 	virtual void Draw() override;
 	// ~IAnalyserUI
+
+	void Update();
 
 };

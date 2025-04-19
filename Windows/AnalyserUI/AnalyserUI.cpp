@@ -25,16 +25,22 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-AnalyserUI::AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, SimpleLock* pD3dLock)
+AnalyserUI::AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext)
 {
 	_emu = emu;
 	_hWndParent = hWndParent;
+
 	g_pd3dDeviceContext = pDeviceContext;
 	g_pd3dDevice = pd3dDevice;
 }
 
-bool AnalyserUI::Init()
+bool AnalyserUI::Init(/*ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext*/)
 {
+	EnterCriticalSection(&_d3dCriticalSection);
+
+	/*g_pd3dDeviceContext = pDeviceContext;
+	g_pd3dDevice = pd3dDevice;*/
+
 	WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui", nullptr };
 	RegisterClassExW(&wc);
 	HWND hWnd = ::CreateWindowExW(WS_EX_APPWINDOW, wc.lpszClassName, L"Analyser", /*WS_EX_APPWINDOW*/  WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, _hWndParent, nullptr, wc.hInstance, nullptr);
@@ -102,6 +108,8 @@ bool AnalyserUI::Init()
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(font != nullptr);
 
+	LeaveCriticalSection(&_d3dCriticalSection);
+
 	return true;
 }
 
@@ -118,12 +126,13 @@ void AnalyserUI::Draw()
 	// Process windows messages.
 	// This is needed for the WndProc to be called.
 	// Without this, Imgui mouse clicks don't work.
-	MSG msg;
+	/*MSG msg;
 	while(::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
 		::TranslateMessage(&msg);
 		::DispatchMessage(&msg);
-	}
+	}*/
 
+	// Should I be doing this here?
 	// Handle window being minimized or screen locked
 	if(g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED) {
 		::Sleep(10);
@@ -188,6 +197,26 @@ void AnalyserUI::Draw()
 	LeaveCriticalSection(&_d3dCriticalSection);
 }
 
+void AnalyserUI::Update()
+{
+	// Process windows messages.
+	// This is needed for the WndProc to be called.
+	// Without this, Imgui mouse clicks don't work.
+	MSG msg;
+	while(::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
+		::TranslateMessage(&msg);
+		::DispatchMessage(&msg);
+	}
+	::Sleep(10);
+
+
+	// Do I need to do this?
+	// Handle window being minimized or screen locked
+	/*if(g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED) {
+		::Sleep(10);
+	}*/
+}
+
 void AnalyserUI::StartThread()
 {
 	if(!_thread) {
@@ -215,9 +244,9 @@ void AnalyserUI::ThreadFunc()
 		return;
 
 	while(!_stopFlag.load()) {
-		Draw();
+		//Draw();
+		Update();
 	}
-
 }
 
 void CreateRenderTarget()
