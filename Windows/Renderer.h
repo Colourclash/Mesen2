@@ -10,7 +10,7 @@
 using namespace DirectX;
 
 class Emulator;
-class AnalyserUI;
+class IImGuiRenderer;
 
 namespace DirectX {
 	class SpriteBatch;
@@ -28,7 +28,7 @@ class Renderer final : public IRenderingDevice
 {
 private:
 	Emulator* _emu;
-	AnalyserUI* _analyserUI = nullptr;
+	IImGuiRenderer* _imGuiRenderer = nullptr;
 
 	HWND _hWnd = nullptr;
 
@@ -99,7 +99,7 @@ public:
 
 	ID3D11Device* GetD3dDevice() const { return _pd3dDevice; }
 	ID3D11DeviceContext* GetD3dDeviceContext() const { return _pDeviceContext; }
-	void SetAnalyserUI(AnalyserUI* analyserUI) { _analyserUI = analyserUI;  }
+	void AddImGuiRenderer(IImGuiRenderer* pImGuiRenderer) { _imGuiRenderer = pImGuiRenderer;  }
 
 	void SetExclusiveFullscreenMode(bool fullscreen, void* windowHandle) override;
 

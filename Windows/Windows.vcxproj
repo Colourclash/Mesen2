@@ -172,6 +172,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnalyserUI\AnalyserUI.h" />
+    <ClInclude Include="AnalyserUI\IImGuiRenderer.h" />
+    <ClInclude Include="AnalyserUI\ImguiRenderer_Win32_DX11.h" />
     <ClInclude Include="DirectInputManager.h" />
     <ClInclude Include="DirectXTK\BufferHelpers.h" />
     <ClInclude Include="DirectXTK\CommonStates.h" />
@@ -197,6 +199,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalyserUI\AnalyserUI.cpp" />
+    <ClCompile Include="AnalyserUI\ImguiRenderer_Win32_DX11.cpp" />
     <ClCompile Include="DirectInputManager.cpp" />
     <ClCompile Include="DirectXTK\BufferHelpers.cpp" />
     <ClCompile Include="DirectXTK\CommonStates.cpp" />

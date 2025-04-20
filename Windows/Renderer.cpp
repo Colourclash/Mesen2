@@ -8,7 +8,7 @@
 #include "Core/Shared/SettingTypes.h"
 #include "Core/Shared/EmuSettings.h"
 #include "Utilities/UTF8Util.h"
-#include "AnalyserUI/AnalyserUI.h"
+#include "AnalyserUI/IImGuiRenderer.h"
 
 using namespace DirectX;
 
@@ -628,7 +628,7 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 		Reset();
 	}
 
-	if(_analyserUI) {
-		_analyserUI->Draw();
+	if(_imGuiRenderer) {
+		_imGuiRenderer->Draw();
 	}
 }

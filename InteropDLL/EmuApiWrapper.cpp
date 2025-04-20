@@ -25,6 +25,7 @@
 	#include "Windows/WindowsKeyManager.h"
 	#include "Windows/WindowsMouseManager.h"
 	#include "Windows/AnalyserUI/AnalyserUI.h"
+	#include "Windows/AnalyserUI/ImGuiRenderer_Win32_DX11.h"
 #elif __APPLE__
 	#include "Sdl/SdlSoundManager.h"
 	#include "MacOS/MacOSKeyManager.h"
@@ -44,6 +45,7 @@ unique_ptr<IKeyManager> _keyManager;
 unique_ptr<IMouseManager> _mouseManager;
 #ifdef _WIN32
 unique_ptr<AnalyserUI> _analyserUI;
+unique_ptr<IImGuiRenderer> _imguiRenderer;
 #endif
 unique_ptr<Emulator> _emu(new Emulator());
 bool _softwareRenderer = false;
@@ -96,10 +98,12 @@ extern "C" {
 				} else {
 					#ifdef _WIN32
 						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle);
-						AnalyserUI* pAnalyser = new AnalyserUI(_emu.get(), (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext());
-						pAnalyser->Start();
-						pRenderer->SetAnalyserUI(pAnalyser);
+						AnalyserUI* pAnalyser = new AnalyserUI(_emu.get());
+						IImGuiRenderer* pImGuiRenderer = new ImGuiRenderer_Win32_DX11(pAnalyser, (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext());
+						pImGuiRenderer->Start();
+						pRenderer->AddImGuiRenderer(pImGuiRenderer);
 						_renderer.reset(pRenderer);
+						_imguiRenderer.reset(pImGuiRenderer);
 						_analyserUI.reset(pAnalyser);
 					#elif __APPLE__
 						_renderer.reset(new SoftwareRenderer(_emu.get()));

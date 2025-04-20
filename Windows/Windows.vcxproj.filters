@@ -89,6 +89,12 @@
     <ClInclude Include="AnalyserUI\AnalyserUI.h">
       <Filter>Source Files\AnalyserUI</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyserUI\ImguiRenderer_Win32_DX11.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalyserUI\IImGuiRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -143,6 +149,9 @@
       <Filter>Source Files\imgui\backends</Filter>
     </ClCompile>
     <ClCompile Include="AnalyserUI\AnalyserUI.cpp">
+      <Filter>Source Files\AnalyserUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\ImguiRenderer_Win32_DX11.cpp">
       <Filter>Source Files\AnalyserUI</Filter>
     </ClCompile>
   </ItemGroup>
