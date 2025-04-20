@@ -239,6 +239,10 @@ extern "C" {
 		_soundManager.reset();
 		_keyManager.reset();
 		_emu.reset();
+#ifdef _WIN32
+		// Can we guarantee the renderer thread is stopped by this point?
+		_analyserUI.reset();
+#endif
 	}
 
 	DllExport INotificationListener* __stdcall RegisterNotificationCallback(NotificationListenerCallback callback)

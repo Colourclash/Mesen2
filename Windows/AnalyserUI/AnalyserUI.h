@@ -8,6 +8,8 @@ class Emulator;
 // - stop thread
 // - shutdown imgui
 // - deal with if pd3dDevice or pDeviceContext is null
+// - provide way to open analyser window if it is closed
+// -
 
 class AnalyserUI final
 {
@@ -21,6 +23,8 @@ private:
 
 	// todo shutdown
 	
+	// Our window handle
+	HWND _hWnd = nullptr;
 	HWND _hWndParent = nullptr;
 
 	ID3D11Device*				_pd3dDevice = nullptr;
@@ -33,6 +37,7 @@ private:
 	void CreateRenderTarget();
 	void CleanupRenderTarget();
 	bool CreateSwapChain(HWND hWnd);
+	void CleanupD3D();
 
 public:
 	// todo: make this platform agnostic
@@ -40,11 +45,12 @@ public:
 	~AnalyserUI();
 
 	void Start();
-	void Stop();
+	void StopThread();
 	void ThreadFunc();
 
 	// Initialise ImGui and create the window
 	bool Init();
+
 	void Draw();
 	void Update();
 };

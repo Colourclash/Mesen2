@@ -24,23 +24,37 @@ AnalyserUI::AnalyserUI(Emulator* emu, HWND hWndParent, ID3D11Device* pd3dDevice,
 	_pd3dDevice = pd3dDevice;
 }
 
+AnalyserUI::~AnalyserUI()
+{
+	StopThread();
+
+	// Cleanup
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
+	CleanupD3D();
+	::DestroyWindow(_hWnd);
+	::UnregisterClassW(L"ImGui", GetModuleHandle(nullptr));
+}
+
 bool AnalyserUI::Init()
 {
 	WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui", nullptr };
 	RegisterClassExW(&wc);
-	HWND hWnd = ::CreateWindowExW(WS_EX_APPWINDOW, wc.lpszClassName, L"Analyser", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, _hWndParent, nullptr, wc.hInstance, nullptr);
+	_hWnd = ::CreateWindowExW(WS_EX_APPWINDOW, wc.lpszClassName, L"Analyser", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, _hWndParent, nullptr, wc.hInstance, nullptr);
 
-	if(!hWnd)
+	if(!_hWnd)
 		return false;
 
-	if(!CreateSwapChain(hWnd)) 
+	if(!CreateSwapChain(_hWnd)) 
 	{
 		return false;
 	}
 
 	// Show the window
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
-	UpdateWindow(hWnd);
+	ShowWindow(_hWnd, SW_SHOWDEFAULT);
+	UpdateWindow(_hWnd);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -74,7 +88,7 @@ bool AnalyserUI::Init()
 	}
 
 	// Setup Platform/Renderer backends
-	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplWin32_Init(_hWnd);
 	ImGui_ImplDX11_Init(_pd3dDevice, _pd3dDeviceContext);
 
 	// Load Fonts
@@ -96,9 +110,10 @@ bool AnalyserUI::Init()
 	return true;
 }
 
-AnalyserUI::~AnalyserUI()
+void AnalyserUI::CleanupD3D()
 {
-	// todo clean up
+	CleanupRenderTarget();
+	if(_pSwapChain) { _pSwapChain->Release(); _pSwapChain = nullptr; }
 }
 
 void AnalyserUI::Draw()
@@ -165,7 +180,7 @@ void AnalyserUI::Draw()
 
 void AnalyserUI::Update()
 {
-	// Process windows messages.
+	// Poll and handle messages (inputs, window resize, etc.)
 	// This is needed for the WndProc to be called.
 	// Without this, Imgui mouse clicks don't work.
 	MSG msg;
@@ -191,18 +206,19 @@ void AnalyserUI::Start()
 			_thread.reset(new std::thread(&AnalyserUI::ThreadFunc, this));
 		}
 	}
+
+	// Wait for initialisation to complete for thread safety reasons.
+	// We don't want any rendering to begin until we are fully initialised.
 	while(!_initialisedFlag);
 	// sleep here?
 }
 
-void AnalyserUI::Stop()
+void AnalyserUI::StopThread()
 {
 	_stopFlag = true;
 	if(_thread) {
-		if(_thread) {
-			_thread->join();
-			_thread.reset();
-		}
+		_thread->join();
+		_thread.reset();
 	}
 }
 

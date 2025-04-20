@@ -24,6 +24,7 @@ Renderer::~Renderer()
 {
 	VideoRenderer* videoRenderer = _emu->GetVideoRenderer();
 	if(videoRenderer) {
+		// This stops the video renderer thread
 		videoRenderer->UnregisterRenderingDevice(this);
 	}
 	CleanupDevice();
