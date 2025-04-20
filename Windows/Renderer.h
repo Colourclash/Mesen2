@@ -94,7 +94,7 @@ private:
 	DXGI_FORMAT GetTextureFormat();
 
 public:
-	Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI);
+	Renderer(Emulator* emu, HWND hWnd);
 	~Renderer();
 
 	ID3D11Device* GetD3dDevice() const { return _pd3dDevice; }
@@ -108,6 +108,4 @@ public:
 	void ClearFrame() override;
 
 	void UpdateFrame(RenderedFrame& frame) override;
-
-	void OnRendererThreadStarted() override;
 };

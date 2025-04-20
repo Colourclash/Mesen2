@@ -44,7 +44,6 @@ unique_ptr<IKeyManager> _keyManager;
 unique_ptr<IMouseManager> _mouseManager;
 #ifdef _WIN32
 unique_ptr<AnalyserUI> _analyserUI;
-CRITICAL_SECTION _d3dCriticalSection;
 #endif
 unique_ptr<Emulator> _emu(new Emulator());
 bool _softwareRenderer = false;
@@ -96,12 +95,12 @@ extern "C" {
 					_renderer.reset(new SoftwareRenderer(_emu.get()));
 				} else {
 					#ifdef _WIN32
-						InitializeCriticalSection(&_d3dCriticalSection);
-						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle, nullptr /*_analyserUI.get()*/);
-						_analyserUI.reset(new AnalyserUI(_emu.get(), (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext()));
-						_analyserUI.get()->StartThread();
-						pRenderer->SetAnalyserUI(_analyserUI.get());
+						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle);
+						AnalyserUI* pAnalyser = new AnalyserUI(_emu.get(), (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext());
+						pAnalyser->Start();
+						pRenderer->SetAnalyserUI(pAnalyser);
 						_renderer.reset(pRenderer);
+						_analyserUI.reset(pAnalyser);
 					#elif __APPLE__
 						_renderer.reset(new SoftwareRenderer(_emu.get()));
 					#else

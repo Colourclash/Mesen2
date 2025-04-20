@@ -11,13 +11,11 @@
 #include "AnalyserUI/AnalyserUI.h"
 
 using namespace DirectX;
-extern CRITICAL_SECTION _d3dCriticalSection;
 
-Renderer::Renderer(Emulator* emu, HWND hWnd, AnalyserUI* analyserUI)
+Renderer::Renderer(Emulator* emu, HWND hWnd)
 {
 	_emu = emu;
 	_hWnd = hWnd;
-	_analyserUI = analyserUI;
 
 	SetScreenSize(256, 224);
 }
@@ -159,7 +157,7 @@ void Renderer::Reset()
 	if(FAILED(InitDevice())) {
 		CleanupDevice();
 	} else {
-		// this starts the render thread if it is not running
+		// This starts the render thread if it is not running
 		_emu->GetVideoRenderer()->RegisterRenderingDevice(this);
 	}
 
@@ -168,8 +166,6 @@ void Renderer::Reset()
 
 void Renderer::CleanupDevice()
 {
-	EnterCriticalSection(&_d3dCriticalSection);
-
 	ResetTextureBuffers();
 	ReleaseRenderTargetView();
 	if(_pSwapChain) {
@@ -201,8 +197,6 @@ void Renderer::CleanupDevice()
 		_scriptHud.Shader->Release();
 		_scriptHud.Shader = nullptr;
 	}
-
-	LeaveCriticalSection(&_d3dCriticalSection);
 }
 
 void Renderer::ResetTextureBuffers()
@@ -232,14 +226,11 @@ void Renderer::ReleaseRenderTargetView()
 
 HRESULT Renderer::CreateRenderTargetView()
 {
-	EnterCriticalSection(&_d3dCriticalSection);
-
 	// Create a render target view
 	ID3D11Texture2D* pBackBuffer = nullptr;
 	HRESULT hr = _pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 	if(FAILED(hr)) {
 		MessageManager::Log("SwapChain::GetBuffer() failed - Error:" + std::to_string(hr));
-		//leave critical section?
 		return hr;
 	}
 
@@ -247,21 +238,16 @@ HRESULT Renderer::CreateRenderTargetView()
 	pBackBuffer->Release();
 	if(FAILED(hr)) {
 		MessageManager::Log("D3DDevice::CreateRenderTargetView() failed - Error:" + std::to_string(hr));
-		//leave critical section?
 		return hr;
 	}
 
 	_pDeviceContext->OMSetRenderTargets(1, &_pRenderTargetView, nullptr);
-
-	LeaveCriticalSection(&_d3dCriticalSection);
 
 	return S_OK;
 }
 
 HRESULT Renderer::CreateEmuTextureBuffers()
 {
-	EnterCriticalSection(&_d3dCriticalSection);
-
 	// Setup the viewport
 	D3D11_VIEWPORT vp;
 	vp.Width = (FLOAT)_realScreenWidth;
@@ -289,8 +275,6 @@ HRESULT Renderer::CreateEmuTextureBuffers()
 	////////////////////////////////////////////////////////////////////////////
 	_spriteBatch.reset(new SpriteBatch(_pDeviceContext));
 
-	LeaveCriticalSection(&_d3dCriticalSection);
-
 	return S_OK;
 }
 
@@ -299,8 +283,6 @@ HRESULT Renderer::CreateEmuTextureBuffers()
 //--------------------------------------------------------------------------------------
 HRESULT Renderer::InitDevice()
 {
-	// critical section here?
-
 	HRESULT hr = S_OK;
 
 	UINT createDeviceFlags = 0;
@@ -601,15 +583,8 @@ void Renderer::DrawHud(HudRenderInfo& hud, RenderSurfaceInfo& hudSurface)
 	_spriteBatch->Draw(hud.Shader, destRect);
 }
 
-//bool bInitAnalyser = false;
-
 void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 {
-	/*if(!bInitAnalyser) {
-		_analyserUI->Init(_pd3dDevice, _pDeviceContext);
-		bInitAnalyser = true;
-	}*/
-
 	auto lock = _frameLock.AcquireSafe();
 	if(_newFullscreen != _fullscreen) {
 		SetScreenSize(_emuFrameWidth, _emuFrameHeight);
@@ -623,7 +598,6 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 			return;
 		}
 	}
-	EnterCriticalSection(&_d3dCriticalSection);
 
 	VideoConfig cfg = _emu->GetSettings()->GetVideoConfig();
 
@@ -653,14 +627,7 @@ void Renderer::Render(RenderSurfaceInfo& emuHud, RenderSurfaceInfo& scriptHud)
 		Reset();
 	}
 
-	LeaveCriticalSection(&_d3dCriticalSection);
-
 	if(_analyserUI) {
 		_analyserUI->Draw();
 	}
-}
-
-void Renderer::OnRendererThreadStarted()
-{
-	//_analyserUI->Init(_pd3dDevice, _pDeviceContext);
 }
