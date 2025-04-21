@@ -5,16 +5,29 @@
 #include "IImGuiDraw.h"
 
 class Emulator;
+class ViewerBase;
+class GlobalsViewer;
 
 // Todo:
-// - deal with if pd3dDevice or pDeviceContext is null
-// - provide way to open analyser window if it is closed
-// -
+// - 
 
 class AnalyserUI : public IImGuiDraw
 {	
 private:
 	Emulator* _emu = nullptr;
+
+	bool _bShowImGuiDemo = false;
+	bool _bShowImPlotDemo = false;
+
+	std::vector<ViewerBase*> _viewers;
+
+private:
+	void DrawDockingView();
+	void DrawUI();
+	void DrawMainMenu();
+	void OptionsMenu();
+
+	void AddViewer(ViewerBase* pViewer);
 
 public:
 	AnalyserUI(Emulator* emu);

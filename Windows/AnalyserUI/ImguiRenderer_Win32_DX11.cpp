@@ -112,6 +112,8 @@ bool ImGuiRenderer_Win32_DX11::Init()
 void ImGuiRenderer_Win32_DX11::CleanupD3D()
 {
 	CleanupRenderTarget();
+
+	// Seems to be a thread hang here
 	if(_pSwapChain) { _pSwapChain->Release(); _pSwapChain = nullptr; }
 }
 

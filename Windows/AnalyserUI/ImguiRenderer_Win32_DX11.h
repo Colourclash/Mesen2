@@ -3,6 +3,11 @@
 #include "pch.h"
 #include "IImGuiRenderer.h"
 
+// Todo:
+// - deal with if pd3dDevice or pDeviceContext is null
+// - provide way to open analyser window if it is closed
+// -
+
 class IImGuiDraw;
 
 class ImGuiRenderer_Win32_DX11 : public IImGuiRenderer
