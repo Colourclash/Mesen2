@@ -6,13 +6,14 @@
 #include "AnalyserUI.h"
 #include "Viewers/GlobalsViewer.h"
 #include "Viewers/RegistersViewer.h"
+#include "Core/Shared/Emulator.h"
 
 AnalyserUI::AnalyserUI(Emulator* emu)
 {
-	_emu = emu;
+	_pEmu = emu;
 
-	AddViewer(new GlobalsViewer(_emu));
-	AddViewer(new RegistersViewer(_emu));
+	AddViewer(new GlobalsViewer(_pEmu));
+	AddViewer(new RegistersViewer(_pEmu));
 }
 
 AnalyserUI::~AnalyserUI()
@@ -77,6 +78,10 @@ void AnalyserUI::DrawUI()
 	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if(_bShowImGuiDemo)
 		ImGui::ShowDemoWindow(&_bShowImGuiDemo);
+
+	// PC Engine only - for now
+	if(!_pEmu->GetConsole().get() || _pEmu->GetConsoleType() != ConsoleType::PcEngine)
+		return;
 	
 	/*if(_bShowImPlotDemo)
 		ImPlot::ShowDemoWindow(&_bShowImPlotDemo);*/

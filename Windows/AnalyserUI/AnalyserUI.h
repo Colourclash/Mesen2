@@ -14,7 +14,7 @@ class GlobalsViewer;
 class AnalyserUI : public IImGuiDraw
 {	
 private:
-	Emulator* _emu = nullptr;
+	Emulator* _pEmu = nullptr;
 
 	bool _bShowImGuiDemo = false;
 	bool _bShowImPlotDemo = false;

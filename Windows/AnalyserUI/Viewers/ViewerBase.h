@@ -8,7 +8,7 @@ class Emulator;
 class ViewerBase
 {
 public:
-	ViewerBase(Emulator* pEmulator) : _pEmulator(pEmulator) {}
+	ViewerBase(Emulator* pEmu) : _pEmu(pEmu) {}
 	virtual bool	Init() = 0;
 	virtual void	ResetForGame() {};
 	virtual void	Shutdown() = 0;
@@ -16,7 +16,7 @@ public:
 
 	const char* GetName() const { return _name.c_str(); }
 protected:
-	Emulator* _pEmulator = nullptr;
+	Emulator* _pEmu = nullptr;
 	std::string _name;
 public:
 	bool _bOpen = true;
