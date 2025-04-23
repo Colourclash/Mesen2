@@ -24,9 +24,10 @@ struct LabelInfo
 
 class LabelManager
 {
-private:
+public:
 	unordered_map<uint64_t, LabelInfo, AddressHasher> _codeLabels;
 	unordered_map<string, uint64_t> _codeLabelReverseLookup;
+private:
 
 	Debugger *_debugger;
 

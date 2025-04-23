@@ -2,6 +2,13 @@
 
 #include <imgui.h>
 #include "misc/cpp/imgui_stdlib.h"
+#include "Core/Shared/Emulator.h"
+#include "Core/Debugger/LabelManager.h"
+//#include "Core/PCE/PceTypes.h"
+//#include "Core/PCE/PceConsole.h"
+//#include "Core/PCE/PceCpu.h"
+#include "Shared/DebuggerRequest.h"
+
 //#include "ImGuiSupport/ImGuiScaling.h"
 //#include "CodeAnalyserUI.h"
 //#include "../CodeAnalyser.h"
@@ -410,6 +417,14 @@ void GlobalsViewer::DrawGlobals()
 {
 	//FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 	//FCodeAnalysisViewState& viewState = state.GetFocussedViewState();
+
+	DebuggerRequest req = _pEmu->GetDebugger(true);
+	if (Debugger* dbg = req.GetDebugger()) {
+		for(auto pp : dbg->GetLabelManager()->_codeLabels)
+		{
+			ImGui::Text("%s", pp.second.Label.c_str());
+		}
+	}
 
 	if (ImGui::InputText("Filter", &FilterText))
 	{
