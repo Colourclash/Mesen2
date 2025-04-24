@@ -113,6 +113,9 @@
     <ClInclude Include="AnalyserUI\Viewers\ViewerBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyserUI\Viewers\CodeAnalysisViewer.h">
+      <Filter>Source Files\AnalyserUI\Viewers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Renderer.cpp">
@@ -182,6 +185,9 @@
       <Filter>Source Files\imgui\misc\cpp</Filter>
     </ClCompile>
     <ClCompile Include="AnalyserUI\Viewers\RegistersViewer.cpp">
+      <Filter>Source Files\AnalyserUI\Viewers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\Viewers\CodeAnalysisViewer.cpp">
       <Filter>Source Files\AnalyserUI\Viewers</Filter>
     </ClCompile>
   </ItemGroup>
