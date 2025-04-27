@@ -148,7 +148,11 @@ extern "C" {
 	DllExport bool __stdcall LoadRom(char* filename, char* patchFile)
 	{
 		_emu->GetGameClient()->Disconnect();
-		return _emu->LoadRom((VirtualFile)filename, patchFile ? (VirtualFile)patchFile : VirtualFile());
+		const bool bResult = _emu->LoadRom((VirtualFile)filename, patchFile ? (VirtualFile)patchFile : VirtualFile());
+		if (bResult)
+			_analyserUI->OnRomLoaded();
+		// what to do when it fails to load a rom?
+		return bResult;
 	}
 
 	DllExport void __stdcall AddKnownGameFolder(char* folder) { FolderUtilities::AddKnownGameFolder(folder); }

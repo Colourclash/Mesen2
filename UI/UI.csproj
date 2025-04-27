@@ -94,6 +94,8 @@
 		<RestoreSources>
 			https://nuget-feed-nightly.avaloniaui.net/v3/index.json;https://api.nuget.org/v3/index.json
 		</RestoreSources>
+		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+		<EnableNETAnalyzers>False</EnableNETAnalyzers>
 	</PropertyGroup>
 	<ItemGroup>
 		<TrimmerRootAssembly Include="Mesen" />

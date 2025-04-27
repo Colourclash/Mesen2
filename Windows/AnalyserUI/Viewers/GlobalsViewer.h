@@ -18,7 +18,7 @@ struct LabelListFilter
 class GlobalsViewer : public ViewerBase
 {
 public:
-	GlobalsViewer(Emulator* pEmulator) : ViewerBase(pEmulator) { _name = "Globals"; }
+	GlobalsViewer(Emulator* pEmulator, AnalyserUI* pAnalyserUI) : ViewerBase(pEmulator, pAnalyserUI) { _name = "Globals"; }
 	bool	Init(void) override;
 	void	Shutdown(void) override;
 	void	DrawUI() override;

@@ -17,14 +17,27 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 {
 	_pEmu = emu;
 
-	AddViewer(new GlobalsViewer(_pEmu));
-	AddViewer(new RegistersViewer(_pEmu));
-	AddViewer(new CodeAnalysisViewer(_pEmu));
-	AddViewer(new CallstackViewer(_pEmu));
+	AddViewer(new GlobalsViewer(_pEmu, this));
+	AddViewer(new RegistersViewer(_pEmu, this));
+	AddViewer(new CodeAnalysisViewer(_pEmu, this));
+	AddViewer(new CallstackViewer(_pEmu, this));
 }
 
 AnalyserUI::~AnalyserUI()
 {
+}
+
+void AnalyserUI::Reset()
+{
+	_consoleType = _pEmu->GetConsoleType();
+	_cpuType = _pEmu->GetCpuTypes()[0];
+}
+
+// todo: check which thread this is called from.
+// todo: this doesn't get called the emulator boots up.
+void AnalyserUI::OnRomLoaded()
+{
+	Reset();
 }
 
 void AnalyserUI::Draw()
@@ -82,13 +95,16 @@ void AnalyserUI::DrawDockingView()
 
 void AnalyserUI::DrawUI()
 {
-	// 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 	if(_bShowImGuiDemo)
 		ImGui::ShowDemoWindow(&_bShowImGuiDemo);
 
-	// PC Engine only - for now
-	if(!_pEmu->GetConsole().get() || _pEmu->GetConsoleType() != ConsoleType::PcEngine)
+	if(!_pEmu->GetConsole().get())
 		return;
+	
+	if (_consoleType != _pEmu->GetConsoleType())
+	{
+		Reset();
+	}
 	
 	/*if(_bShowImPlotDemo)
 		ImPlot::ShowDemoWindow(&_bShowImPlotDemo);*/

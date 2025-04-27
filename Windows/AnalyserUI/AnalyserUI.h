@@ -4,6 +4,9 @@
 
 #include "IImGuiDraw.h"
 
+#include "Core\Shared\SettingTypes.h"
+#include "Core\Shared\CpuType.h"
+
 class Emulator;
 class ViewerBase;
 class GlobalsViewer;
@@ -21,6 +24,9 @@ private:
 
 	std::vector<ViewerBase*> _viewers;
 
+	ConsoleType _consoleType = (ConsoleType)-1;
+	CpuType _cpuType = (CpuType)0xff;
+
 private:
 	void DrawDockingView();
 	void DrawUI();
@@ -36,4 +42,10 @@ public:
 	// IImGuiDraw
 	virtual void Draw() override;
 	// ~IImGuiDraw
+
+	void OnRomLoaded();
+	void Reset();
+
+	ConsoleType GetConsoleType() const { return _consoleType; }
+	CpuType GetCpuType() const { return _cpuType; }
 };
