@@ -2,6 +2,8 @@
 
 #include "ViewerBase.h"
 
+class Debugger;
+
 class CodeAnalysisViewer : public ViewerBase
 {
 public:
@@ -9,5 +11,9 @@ public:
 	bool	Init(void) override;
 	void	Shutdown(void) override;
 	void	DrawUI() override;
+
+protected:
+	void	DrawDebuggerButtons(Debugger* pDebugger);
+	void	ProcessKeyCommands(Debugger* pDebugger);
 };
 
