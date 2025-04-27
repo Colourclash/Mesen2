@@ -174,6 +174,7 @@
     <ClInclude Include="AnalyserUI\AnalyserUI.h" />
     <ClInclude Include="AnalyserUI\IImGuiRenderer.h" />
     <ClInclude Include="AnalyserUI\ImguiRenderer_Win32_DX11.h" />
+    <ClInclude Include="AnalyserUI\Viewers\CallstackViewer.h" />
     <ClInclude Include="AnalyserUI\Viewers\CodeAnalysisViewer.h" />
     <ClInclude Include="AnalyserUI\Viewers\GlobalsViewer.h" />
     <ClInclude Include="AnalyserUI\Viewers\RegistersViewer.h" />
@@ -204,6 +205,7 @@
   <ItemGroup>
     <ClCompile Include="AnalyserUI\AnalyserUI.cpp" />
     <ClCompile Include="AnalyserUI\ImguiRenderer_Win32_DX11.cpp" />
+    <ClCompile Include="AnalyserUI\Viewers\CallstackViewer.cpp" />
     <ClCompile Include="AnalyserUI\Viewers\CodeAnalysisViewer.cpp" />
     <ClCompile Include="AnalyserUI\Viewers\GlobalsViewer.cpp" />
     <ClCompile Include="AnalyserUI\Viewers\RegistersViewer.cpp" />

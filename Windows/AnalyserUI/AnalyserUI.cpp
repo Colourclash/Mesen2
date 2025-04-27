@@ -9,6 +9,7 @@
 #include "Viewers/GlobalsViewer.h"
 #include "Viewers/RegistersViewer.h"
 #include "Viewers/CodeAnalysisViewer.h"
+#include "Viewers/CallstackViewer.h"
 
 #include "Core/Shared/Emulator.h"
 
@@ -19,6 +20,7 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 	AddViewer(new GlobalsViewer(_pEmu));
 	AddViewer(new RegistersViewer(_pEmu));
 	AddViewer(new CodeAnalysisViewer(_pEmu));
+	AddViewer(new CallstackViewer(_pEmu));
 }
 
 AnalyserUI::~AnalyserUI()
