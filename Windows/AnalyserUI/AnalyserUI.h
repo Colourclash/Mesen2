@@ -4,8 +4,9 @@
 
 #include "IImGuiDraw.h"
 
-#include "Core\Shared\SettingTypes.h"
-#include "Core\Shared\CpuType.h"
+#include "Core/Shared/SettingTypes.h"
+#include "Core/Shared/CpuType.h"
+#include "Shared/Interfaces/INotificationListener.h"
 
 class Emulator;
 class ViewerBase;
@@ -14,7 +15,7 @@ class GlobalsViewer;
 // Todo:
 // - 
 
-class AnalyserUI : public IImGuiDraw
+class AnalyserUI : public IImGuiDraw, public INotificationListener, public std::enable_shared_from_this<AnalyserUI>
 {	
 private:
 	Emulator* _pEmu = nullptr;
@@ -26,6 +27,9 @@ private:
 
 	ConsoleType _consoleType = (ConsoleType)-1;
 	CpuType _cpuType = (CpuType)0xff;
+
+	// This is needed so we can use INotificationListener, which needs a shared_ptr to use.
+	shared_ptr<AnalyserUI> _sharedSelf;
 
 private:
 	void DrawDockingView();
@@ -39,11 +43,16 @@ public:
 	AnalyserUI(Emulator* emu);
 	~AnalyserUI();
 
+	bool Init();
+
 	// IImGuiDraw
 	virtual void Draw() override;
 	// ~IImGuiDraw
 
-	void OnRomLoaded();
+	// INotificationListener
+	virtual void ProcessNotification(ConsoleNotificationType type, void* parameter) override;
+	// ~INotificationListener
+
 	void Reset();
 
 	ConsoleType GetConsoleType() const { return _consoleType; }

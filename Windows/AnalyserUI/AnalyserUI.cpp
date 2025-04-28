@@ -1,17 +1,17 @@
-#include <thread>
-
-#include "imgui.h"
-
-#include "Common.h"
 #include "AnalyserUI.h"
+
+#include <thread>
+#include "imgui.h"
+#include "Common.h"
+
+#include "Core/Shared/Emulator.h"
+#include "Shared/NotificationManager.h"
 
 // Viewers
 #include "Viewers/GlobalsViewer.h"
 #include "Viewers/RegistersViewer.h"
 #include "Viewers/CodeAnalysisViewer.h"
 #include "Viewers/CallstackViewer.h"
-
-#include "Core/Shared/Emulator.h"
 
 AnalyserUI::AnalyserUI(Emulator* emu)
 {
@@ -21,10 +21,18 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 	AddViewer(new RegistersViewer(_pEmu, this));
 	AddViewer(new CodeAnalysisViewer(_pEmu, this));
 	AddViewer(new CallstackViewer(_pEmu, this));
+
+	_sharedSelf.reset(this);
 }
 
 AnalyserUI::~AnalyserUI()
 {
+}
+
+bool AnalyserUI::Init()
+{
+	_pEmu->GetNotificationManager()->RegisterNotificationListener(shared_from_this());
+	return true;
 }
 
 void AnalyserUI::Reset()
@@ -33,11 +41,15 @@ void AnalyserUI::Reset()
 	_cpuType = _pEmu->GetCpuTypes()[0];
 }
 
-// todo: check which thread this is called from.
-// todo: this doesn't get called the emulator boots up.
-void AnalyserUI::OnRomLoaded()
+// Note: this is called on a different thread to the main Draw() function
+void AnalyserUI::ProcessNotification(ConsoleNotificationType type, void* parameter)
 {
-	Reset();
+	if(type == ConsoleNotificationType::GameLoaded) {
+		Reset();
+		/*shared_ptr<IConsole> console = _emu->GetConsole();
+		if(console) {
+		}*/
+	}
 }
 
 void AnalyserUI::Draw()
@@ -45,53 +57,6 @@ void AnalyserUI::Draw()
 	DrawDockingView();
 }
 
-void AnalyserUI::DrawDockingView()
-{
-	//static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-	bool bOpen = false;
-	ImGuiDockNodeFlags dockFlags = 0;
-
-	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-	// because it would be confusing to have two docking targets within each others.
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->Pos);
-	ImGui::SetNextWindowSize(viewport->Size);
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
-	if(dockFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
-
-	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
-	// all active windows docked into it will lose their parent and become undocked.
-	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
-	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	if(ImGui::Begin("DockSpace Demo", &bOpen, window_flags)) {
-		ImGui::PopStyleVar();
-		ImGui::PopStyleVar(2);
-
-		// DockSpace
-		ImGuiIO& io = ImGui::GetIO();
-		if(io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
-			const ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockFlags);
-		}
-
-		DrawMainMenu();
-		DrawUI();
-
-		ImGui::End();
-	} else {
-		ImGui::PopStyleVar();
-	}
-}
 
 void AnalyserUI::DrawUI()
 {
@@ -250,4 +215,52 @@ void AnalyserUI::AddViewer(ViewerBase* pViewer)
 {
 	pViewer->Init();
 	_viewers.push_back(pViewer);
+}
+
+void AnalyserUI::DrawDockingView()
+{
+	//static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+	bool bOpen = false;
+	ImGuiDockNodeFlags dockFlags = 0;
+
+	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+	// because it would be confusing to have two docking targets within each others.
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
+	if(dockFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
+	// all active windows docked into it will lose their parent and become undocked.
+	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
+	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	if(ImGui::Begin("DockSpace Demo", &bOpen, window_flags)) {
+		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(2);
+
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if(io.ConfigFlags & ImGuiConfigFlags_DockingEnable) {
+			const ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockFlags);
+		}
+
+		DrawMainMenu();
+		DrawUI();
+
+		ImGui::End();
+	} else {
+		ImGui::PopStyleVar();
+	}
 }

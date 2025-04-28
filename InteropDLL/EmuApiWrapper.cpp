@@ -99,12 +99,14 @@ extern "C" {
 					#ifdef _WIN32
 						Renderer* pRenderer = new Renderer(_emu.get(), (HWND)_viewerHandle);
 						AnalyserUI* pAnalyser = new AnalyserUI(_emu.get());
-						IImGuiRenderer* pImGuiRenderer = new ImGuiRenderer_Win32_DX11(pAnalyser, (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext());
-						pImGuiRenderer->Start();
-						pRenderer->AddImGuiRenderer(pImGuiRenderer);
-						_renderer.reset(pRenderer);
-						_imguiRenderer.reset(pImGuiRenderer);
+						if(pAnalyser->Init()) {
+							IImGuiRenderer* pImGuiRenderer = new ImGuiRenderer_Win32_DX11(pAnalyser, (HWND)_windowHandle, pRenderer->GetD3dDevice(), pRenderer->GetD3dDeviceContext());
+							pImGuiRenderer->Start();
+							pRenderer->AddImGuiRenderer(pImGuiRenderer);
+							_imguiRenderer.reset(pImGuiRenderer);
+						}
 						_analyserUI.reset(pAnalyser);
+						_renderer.reset(pRenderer);
 					#elif __APPLE__
 						_renderer.reset(new SoftwareRenderer(_emu.get()));
 					#else
@@ -148,11 +150,7 @@ extern "C" {
 	DllExport bool __stdcall LoadRom(char* filename, char* patchFile)
 	{
 		_emu->GetGameClient()->Disconnect();
-		const bool bResult = _emu->LoadRom((VirtualFile)filename, patchFile ? (VirtualFile)patchFile : VirtualFile());
-		if (bResult)
-			_analyserUI->OnRomLoaded();
-		// what to do when it fails to load a rom?
-		return bResult;
+		return _emu->LoadRom((VirtualFile)filename, patchFile ? (VirtualFile)patchFile : VirtualFile());
 	}
 
 	DllExport void __stdcall AddKnownGameFolder(char* folder) { FolderUtilities::AddKnownGameFolder(folder); }
