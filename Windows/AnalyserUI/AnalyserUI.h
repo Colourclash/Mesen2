@@ -11,6 +11,7 @@
 class Emulator;
 class ViewerBase;
 class GlobalsViewer;
+class CodeAnalysisViewer;
 
 // Todo:
 // - 
@@ -22,6 +23,8 @@ private:
 
 	bool _bShowImGuiDemo = false;
 	bool _bShowImPlotDemo = false;
+
+	CodeAnalysisViewer* _pCodeViewer = nullptr;
 
 	std::vector<ViewerBase*> _viewers;
 
@@ -54,6 +57,8 @@ public:
 	// ~INotificationListener
 
 	void Reset();
+
+	CodeAnalysisViewer* GetCodeView() const {	return _pCodeViewer;	}
 
 	ConsoleType GetConsoleType() const { return _consoleType; }
 	CpuType GetCpuType() const { return _cpuType; }

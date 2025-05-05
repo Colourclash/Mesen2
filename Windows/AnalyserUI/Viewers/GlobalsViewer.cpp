@@ -4,10 +4,13 @@
 #include "misc/cpp/imgui_stdlib.h"
 #include "Core/Shared/Emulator.h"
 #include "Core/Debugger/LabelManager.h"
+#include "Core/Debugger/CdlManager.h"
 //#include "Core/PCE/PceTypes.h"
 //#include "Core/PCE/PceConsole.h"
 //#include "Core/PCE/PceCpu.h"
 #include "Shared/DebuggerRequest.h"
+#include "../AnalyserUI/AnalyserUI.h"
+#include "../AnalyserUI/Viewers/CodeAnalysisViewer.h"
 
 //#include "ImGuiSupport/ImGuiScaling.h"
 //#include "CodeAnalyserUI.h"
@@ -413,21 +416,82 @@ void GlobalsViewer::Shutdown(void)
 
 }
 
+// these are in cputypeextensions.cs
+/*
+public static bool SupportsFunctionList(this CpuType cpuType)
+		{
+			switch(cpuType) {
+				case CpuType.Snes:
+				case CpuType.Sa1:
+				case CpuType.Gameboy:
+				case CpuType.Nes:
+				case CpuType.Pce:
+				case CpuType.Sms:
+				case CpuType.Gba:
+				case CpuType.Ws:
+					return true;
+
+				default:
+					return false;
+			};
+		}
+*/
+
+// todo: put in global header file
+MemoryType GetPrgRomMemoryType(CpuType cpuType)
+{
+	switch (cpuType) {
+		case CpuType::Snes: return MemoryType::SnesPrgRom;
+		case CpuType::NecDsp: return MemoryType::DspProgramRom;
+		case CpuType::Sa1: return MemoryType::SnesPrgRom;
+		case CpuType::Gsu: return MemoryType::SnesPrgRom;
+		case CpuType::Cx4: return MemoryType::SnesPrgRom;
+		case CpuType::St018: return MemoryType::St018PrgRom;
+			
+		case CpuType::Gameboy: return MemoryType::GbPrgRom;
+		case CpuType::Nes: return MemoryType::NesPrgRom;
+		case CpuType::Pce: return MemoryType::PcePrgRom;
+		case CpuType::Sms: return MemoryType::SmsPrgRom;
+		case CpuType::Gba: return MemoryType::GbaPrgRom;
+		case CpuType::Ws: return MemoryType::WsPrgRom;
+		default: return MemoryType::None;
+	}
+}
+
 void GlobalsViewer::DrawGlobals()
 {
 	//FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 	//FCodeAnalysisViewState& viewState = state.GetFocussedViewState();
 
 	DebuggerRequest req = _pEmu->GetDebugger(true);
-	if (Debugger* dbg = req.GetDebugger()) {
-		for(auto pp : dbg->GetLabelManager()->_codeLabels)
-		{
+	if (Debugger* pDbg = req.GetDebugger()) {
+		/*for(auto pp : dbg->GetLabelManager()->_codeLabels) {
 			ImGui::Text("%s", pp.second.Label.c_str());
+		}*/
+
+		const CpuType cpuType = _pAnalyserUI->GetCpuType();
+		uint32_t functions[512];
+		
+		static int selected = 0;
+
+		// the functions only seem to exist in prg rom.
+		// do we always want to use prg rom?
+		// can there be functions in work ram?
+		MemoryType prgRomMemType = GetPrgRomMemoryType(cpuType);
+		int count = pDbg->GetCdlManager()->GetCdlFunctions(prgRomMemType, functions, 512);
+		for(int i = 0; i < count; i++) {
+			AddressInfo pcAddr = pDbg->GetRelativeAddress({ (int32_t)functions[i], prgRomMemType }, cpuType);
+			char txt[256];
+			snprintf(txt, 256, "PC: %x ROM: %x", pcAddr.Address, functions[i]);
+			
+			if(ImGui::Selectable(txt, selected == i)) {
+				_pAnalyserUI->GetCodeView()->GotoAddress(pcAddr);
+				selected = i;
+			}
 		}
 	}
 
-	if (ImGui::InputText("Filter", &FilterText))
-	{
+	if (ImGui::InputText("Filter", &FilterText)) {
 		//GlobalFunctionsFilter.FilterText = FilterText;
 		//GlobalDataItemsFilter.FilterText = FilterText;
 		bRebuildFilteredGlobalFunctions = true;

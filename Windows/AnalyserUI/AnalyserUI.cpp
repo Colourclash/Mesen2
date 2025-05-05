@@ -17,9 +17,11 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 {
 	_pEmu = emu;
 
+	_pCodeViewer = new CodeAnalysisViewer(_pEmu, this);
+	AddViewer(_pCodeViewer);
+
 	AddViewer(new GlobalsViewer(_pEmu, this));
 	AddViewer(new RegistersViewer(_pEmu, this));
-	AddViewer(new CodeAnalysisViewer(_pEmu, this));
 	AddViewer(new CallstackViewer(_pEmu, this));
 
 	_sharedSelf.reset(this);
@@ -27,6 +29,7 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 
 AnalyserUI::~AnalyserUI()
 {
+	// crash here destroying the list of viewers
 }
 
 bool AnalyserUI::Init()

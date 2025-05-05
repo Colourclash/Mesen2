@@ -9,6 +9,9 @@
 
 bool CodeAnalysisViewer::Init(void)
 {
+	_GotoAddress = { 0, MemoryType::None };
+	_WindowAddress = { 0, MemoryType::None };
+
 	return true;
 }
 
@@ -119,49 +122,58 @@ void CodeAnalysisViewer::DrawUI()
 		DrawDebuggerButtons(pDbg);
 		ProcessKeyCommands(pDbg);
 
-		const int nNumLines = 10;
+		const int nNumLines = 20;
 		CodeLineData codeLineData[nNumLines];
 		
-		//const uint32_t pc = pDbg->GetProgramCounter(CpuType::Pce, false);
-		const uint32_t pc = pDbg->GetProgramCounter(_pAnalyserUI->GetCpuType(), false);
-		//pDbg->GetDisassembler()->GetDisassemblyOutput(CpuType::Pce, /*0x8000*/pc, codeLineData, nNumLines);
-		pDbg->GetDisassembler()->GetDisassemblyOutput(_pAnalyserUI->GetCpuType(), /*0x8000*/pc, codeLineData, nNumLines);
+		// thread safety crash here.
+		// this can crash in GetLabelAndComment() if the main thread is calling LabelManager SetLabel()
+		
+		if(_GotoAddress.Type != MemoryType::None) {
+			_WindowAddress = _GotoAddress;
+			_GotoAddress.Type = MemoryType::None;
+		}
+		
+		const uint32_t nLines = pDbg->GetDisassembler()->GetDisassemblyOutput(_pAnalyserUI->GetCpuType(), /*0x8000*/_WindowAddress.Address, codeLineData, nNumLines);
 
-		for(int i = 0; i < nNumLines; i++) {
-			string flags = "";
-			if(codeLineData[i].Flags & LineFlags::BlockStart) {
-				flags += "blockstart ";
-				ImGui::SeparatorText("Block Start");
-				continue;
-			}
-			if(codeLineData[i].Flags & LineFlags::BlockEnd){
-				//flags += "blockend ";
-				ImGui::SeparatorText("Block End");
-				continue;
-			}
-			if(codeLineData[i].Flags & LineFlags::SubStart) {
-				ImGui::SeparatorText(codeLineData[i].Text);
-				//flags += "substart ";
-				continue;
-			}
-			if(codeLineData[i].Flags & LineFlags::Label) {
-				ImGui::Text("     %s", codeLineData[i].Text);
-				//flags += "label ";
-				continue;
-			}
-			if(codeLineData[i].Flags & LineFlags::Comment)
-				flags += "comment ";
-			if(codeLineData[i].Flags & LineFlags::Empty)
-				flags += "empty ";
-			if(codeLineData[i].Flags & LineFlags::VerifiedCode)
-				flags += "verifiedcode ";
-			if(codeLineData[i].Flags & LineFlags::VerifiedData)
-				flags += "verifieddata ";
+		if(nLines == 0) {
+			ImGui::Text("No disassembly");
+		} else {
+			for(uint32_t i = 0; i < nLines; i++) {
+				string flags = "";
+				if(codeLineData[i].Flags & LineFlags::BlockStart) {
+					flags += "blockstart ";
+					ImGui::SeparatorText("Block Start");
+					continue;
+				}
+				if(codeLineData[i].Flags & LineFlags::BlockEnd) {
+					//flags += "blockend ";
+					ImGui::SeparatorText("Block End");
+					continue;
+				}
+				if(codeLineData[i].Flags & LineFlags::SubStart) {
+					ImGui::SeparatorText(codeLineData[i].Text);
+					//flags += "substart ";
+					continue;
+				}
+				if(codeLineData[i].Flags & LineFlags::Label) {
+					ImGui::Text("     %s", codeLineData[i].Text);
+					//flags += "label ";
+					continue;
+				}
+				if(codeLineData[i].Flags & LineFlags::Comment)
+					flags += "comment ";
+				if(codeLineData[i].Flags & LineFlags::Empty)
+					flags += "empty ";
+				if(codeLineData[i].Flags & LineFlags::VerifiedCode)
+					flags += "verifiedcode ";
+				if(codeLineData[i].Flags & LineFlags::VerifiedData)
+					flags += "verifieddata ";
 
-			ImGui::Text("%x '%s'", codeLineData[i].Address, codeLineData[i].Text);
-			ImGui::Text("FLAGS: %s", flags.c_str());
-			ImGui::Text("Comment '%s'", codeLineData[i].Comment);
-			ImGui::Separator();
+				ImGui::Text("%x '%s'", codeLineData[i].Address, codeLineData[i].Text);
+				//ImGui::Text("FLAGS: %s", flags.c_str());
+				//ImGui::Text("Comment '%s'", codeLineData[i].Comment);
+				//ImGui::Separator();
+			}
 		}
 	}
 }

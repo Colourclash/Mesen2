@@ -7,6 +7,7 @@
 #include "Core/Debugger/DebugUtilities.h"
 #include "Shared/DebuggerRequest.h"
 #include "../AnalyserUI/AnalyserUI.h"
+#include "../AnalyserUI/Viewers/CodeAnalysisViewer.h"
 
 bool CallstackViewer::Init(void)
 {
@@ -24,7 +25,7 @@ void CallstackViewer::Shutdown(void)
 
 void CallstackViewer::DrawUI() 
 {
-	const CpuType cpuType = _pAnalyserUI->GetCpuType();
+	const CpuType cpuType = _pAnalyserUI->GetCpuType();	
 
 	static int selected = 0;
 	DebuggerRequest req = _pEmu->GetDebugger(true);
@@ -33,9 +34,16 @@ void CallstackViewer::DrawUI()
 		uint32_t callstackSize = 0;
 		pDbg->GetCallstackManager(cpuType)->GetCallstack(_callstack, callstackSize);
 		
+		char txt[256];
+		
 		// Top of stack
 		const uint32_t pc = pDbg->GetProgramCounter(cpuType, false);
-		ImGui::Text("[top] %x %x", pc, pDbg->GetAbsoluteAddress( {(int32_t)pc, DebugUtilities::GetCpuMemoryType(cpuType) }));
+		const AddressInfo pcAddr = { (int32_t)pc, DebugUtilities::GetCpuMemoryType(cpuType) };
+		snprintf(txt, 256, "      %x %x", pc, pDbg->GetAbsoluteAddress(pcAddr).Address);
+		if(ImGui::Selectable(txt, selected == 0)) {
+			_pAnalyserUI->GetCodeView()->GotoAddress(pcAddr);
+			selected = 0;
+		}
 
 		if (callstackSize > 0) {
 			for (int i = callstackSize-1; i >= 0; i--) {
@@ -49,13 +57,14 @@ void CallstackViewer::DrawUI()
 						context = "[NMI] ";
 				}
 				// Source is PC Address. AbsSource is ROM address
-				char txt[256];
 				snprintf(txt, 256, "%s Function:%x PC: %x ROM Addr: %x [mapped=%d]", context.c_str(), functionAddr, _callstack[i].Source, _callstack[i].AbsSource.Address, isMapped);
-				//ImGui::Text("%s Function:%x PC: %x ROM Addr: %x [mapped=%d]", context.c_str(), functionAddr, _callstack[i].Source, _callstack[i].AbsSource, isMapped);
 
-				if (ImGui::Selectable(txt, selected == i))
+				if (ImGui::Selectable(txt, selected == i+1))
 				{
-					selected = i;
+					const AddressInfo gotoAddr = pDbg->GetRelativeAddress(_callstack[i].AbsSource, cpuType);
+					_pAnalyserUI->GetCodeView()->GotoAddress(gotoAddr);
+					
+					selected = i+1;
 				}
 			}
 		}
