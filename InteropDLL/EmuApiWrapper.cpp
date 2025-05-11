@@ -24,8 +24,8 @@
 	#include "Windows/SoundManager.h"
 	#include "Windows/WindowsKeyManager.h"
 	#include "Windows/WindowsMouseManager.h"
-	#include "Windows/AnalyserUI/AnalyserUI.h"
-	#include "Windows/AnalyserUI/ImGuiRenderer_Win32_DX11.h"
+	#include "MesenAnalyser/AnalyserUI/AnalyserUI.h"
+	#include "MesenAnalyser/AnalyserUI/ImGuiRenderer_Win32_DX11.h"
 #elif __APPLE__
 	#include "Sdl/SdlSoundManager.h"
 	#include "MacOS/MacOSKeyManager.h"

@@ -9,8 +9,8 @@
 //#include "Core/PCE/PceConsole.h"
 //#include "Core/PCE/PceCpu.h"
 #include "Shared/DebuggerRequest.h"
-#include "../AnalyserUI/AnalyserUI.h"
-#include "../AnalyserUI/Viewers/CodeAnalysisViewer.h"
+#include "../AnalyserUI.h"
+#include "CodeAnalysisViewer.h"
 
 //#include "ImGuiSupport/ImGuiScaling.h"
 //#include "CodeAnalyserUI.h"

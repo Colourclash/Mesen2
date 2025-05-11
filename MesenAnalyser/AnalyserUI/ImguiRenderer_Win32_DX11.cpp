@@ -282,6 +282,7 @@ bool ImGuiRenderer_Win32_DX11::CreateSwapChain(HWND hWnd)
 	return true;
 }
 
+#ifndef MESEN_ANALYSER
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -320,3 +321,4 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	return ::DefWindowProcW(hWnd, msg, wParam, lParam);
 }
+#endif

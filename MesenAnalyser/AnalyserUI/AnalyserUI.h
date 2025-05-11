@@ -1,12 +1,10 @@
 #pragma once
 
-#include "pch.h"
-
 #include "IImGuiDraw.h"
 
 #include "Core/Shared/SettingTypes.h"
 #include "Core/Shared/CpuType.h"
-#include "Shared/Interfaces/INotificationListener.h"
+#include "Core/Shared/Interfaces/INotificationListener.h"
 
 class Emulator;
 class ViewerBase;

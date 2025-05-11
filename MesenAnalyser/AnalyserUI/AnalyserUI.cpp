@@ -2,10 +2,10 @@
 
 #include <thread>
 #include "imgui.h"
-#include "Common.h"
+//#include "Common.h"
 
 #include "Core/Shared/Emulator.h"
-#include "Shared/NotificationManager.h"
+#include "Core/Shared/NotificationManager.h"
 
 // Viewers
 #include "Viewers/GlobalsViewer.h"

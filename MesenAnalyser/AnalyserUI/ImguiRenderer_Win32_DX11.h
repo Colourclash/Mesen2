@@ -1,6 +1,7 @@
 #pragma once
 
-#include "pch.h"
+#include <atomic>
+
 #include "IImGuiRenderer.h"
 
 // Todo:
@@ -13,9 +14,9 @@ class IImGuiDraw;
 class ImGuiRenderer_Win32_DX11 : public IImGuiRenderer
 {
 private:
-	atomic<bool> _stopFlag = false;
+	std::atomic<bool> _stopFlag = false;
 	unique_ptr<std::thread> _thread;
-	atomic<bool> _initialisedFlag = false;
+	std::atomic<bool> _initialisedFlag = false;
 
 	// Our window handle
 	HWND _hWnd = nullptr;
