@@ -12,6 +12,11 @@
 #include <d3d11.h>
 #include <tchar.h>
 
+#include "Utilities/FolderUtilities.h"
+#include "Core/Shared/Emulator.h"
+#include "Core/Shared/MessageManager.h"
+#include "AnalyserUI/AnalyserUI.h"
+
 // Data
 static ID3D11Device*            g_pd3dDevice = nullptr;
 static ID3D11DeviceContext*     g_pd3dDeviceContext = nullptr;
@@ -34,7 +39,7 @@ int main(int, char**)
     //ImGui_ImplWin32_EnableDpiAwareness();
     WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui DirectX11 Example", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Mesen Analyser", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -97,9 +102,22 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
+#if 0
     bool show_demo_window = true;
     bool show_another_window = false;
+#endif
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	 MessageManager::SetOsdState(false);
+
+	 FolderUtilities::SetHomeFolder("C:\\temp\\mesenhome\\");
+
+	 Emulator* pEmulator = new Emulator();
+	 pEmulator->Initialize();
+	 pEmulator->LoadRom(VirtualFile("c:\\temp\\rabiolepus.pce"), VirtualFile());
+
+	 AnalyserUI* pAnalyserUI = new AnalyserUI(pEmulator);
+	 pAnalyserUI->Init();
 
     // Main loop
     bool done = false;
@@ -140,6 +158,9 @@ int main(int, char**)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
+		  pAnalyserUI->Draw();
+
+#if 0
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
@@ -176,6 +197,7 @@ int main(int, char**)
                 show_another_window = false;
             ImGui::End();
         }
+#endif
 
         // Rendering
         ImGui::Render();
