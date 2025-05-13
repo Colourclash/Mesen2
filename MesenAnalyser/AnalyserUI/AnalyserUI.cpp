@@ -8,10 +8,11 @@
 #include "Core/Shared/NotificationManager.h"
 
 // Viewers
+#include "Viewers/CallstackViewer.h"
+#include "Viewers/CodeAnalysisViewer.h"
 #include "Viewers/GlobalsViewer.h"
 #include "Viewers/RegistersViewer.h"
-#include "Viewers/CodeAnalysisViewer.h"
-#include "Viewers/CallstackViewer.h"
+#include "Viewers/ScreenViewer.h"
 
 AnalyserUI::AnalyserUI(Emulator* emu)
 {
@@ -23,6 +24,7 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 	AddViewer(new GlobalsViewer(_pEmu, this));
 	AddViewer(new RegistersViewer(_pEmu, this));
 	AddViewer(new CallstackViewer(_pEmu, this));
+	AddViewer(new ScreenViewer(_pEmu, this));
 
 	_sharedSelf.reset(this);
 }

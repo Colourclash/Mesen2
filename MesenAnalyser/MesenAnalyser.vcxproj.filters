@@ -19,6 +19,12 @@
     <Filter Include="AnalyserUI\Viewers">
       <UniqueIdentifier>{3043e168-0600-4521-a8db-f9b282d65e7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AnalyserUI\ImGuiSupport">
+      <UniqueIdentifier>{ac7ac1b5-eb11-4301-9176-3f4ef2b97674}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnalyserUI\ImGuiSupport\Windows">
+      <UniqueIdentifier>{491a1cc8-889b-4722-87bb-38759e98441e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -72,6 +78,12 @@
     <ClInclude Include="AnalyserUI\Viewers\ViewerBase.h">
       <Filter>AnalyserUI\Viewers</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyserUI\Viewers\ScreenViewer.h">
+      <Filter>AnalyserUI\Viewers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalyserUI\ImGuiSupport\ImGuiTexture.h">
+      <Filter>AnalyserUI\ImGuiSupport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -121,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="AnalyserUI\Viewers\ViewerBase.cpp">
       <Filter>AnalyserUI\Viewers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\Viewers\ScreenViewer.cpp">
+      <Filter>AnalyserUI\Viewers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\ImGuiSupport\Windows\ImGuiTexture_DX11.cpp">
+      <Filter>AnalyserUI\ImGuiSupport\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
