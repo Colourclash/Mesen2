@@ -19,10 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9F316E83-5AE5-4939-A723-305A94F48005}</ProjectGuid>
+    <ProjectGuid>{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}</ProjectGuid>
     <RootNamespace>example_win32_directx11</RootNamespace>
-    <ProjectName>MesenAnalyser</ProjectName>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>WindowsExecutable</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -32,7 +31,7 @@
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
@@ -45,7 +44,7 @@
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -101,7 +100,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>imgui\;imgui\backends;..\;..\Core;..\Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\imgui\;..\..\imgui\backends;..\..\..\;..\..\..\Core;..\..\..\Windows;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>MESEN_ANALYSER;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -111,8 +110,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;Core.lib;Utilities.lib;Lua.lib;SevenZip.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;$(SolutionDir)\bin\win-x64\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;Core.lib;Utilities.lib;Lua.lib;SevenZip.lib;MesenAnalyser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;$(SolutionDir)\bin\win-x64\Debug\;$(SolutionDir)\MesenAnalyser\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -141,7 +140,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>imgui\;imgui\backends;..\;..\Core;..\Windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\imgui\;..\..\imgui\backends;..\..\..\;..\..\..\Core;..\..\..\Windows;..\..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>MESEN_ANALYSER;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -154,33 +153,31 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;core.lib;Utilities.lib;Lua.lib;SevenZip.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;$(SolutionDir)\bin\win-x64\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Winmm.lib;d3d11.lib;d3dcompiler.lib;dxgi.lib;core.lib;Utilities.lib;Lua.lib;SevenZip.lib;MesenAnalyser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x64;$(SolutionDir)\bin\win-x64\Release\;$(SolutionDir)\MesenAnalyser\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AnalyserUI\AnalyserUI.h" />
-    <ClInclude Include="AnalyserUI\IImGuiDraw.h" />
-    <ClInclude Include="AnalyserUI\IImGuiRenderer.h" />
-    <ClInclude Include="AnalyserUI\ImguiRenderer_Win32_DX11.h" />
-    <ClInclude Include="AnalyserUI\ImGuiSupport\ImGuiTexture.h" />
-    <ClInclude Include="AnalyserUI\Viewers\CallstackViewer.h" />
-    <ClInclude Include="AnalyserUI\Viewers\CodeAnalysisViewer.h" />
-    <ClInclude Include="AnalyserUI\Viewers\GlobalsViewer.h" />
-    <ClInclude Include="AnalyserUI\Viewers\RegistersViewer.h" />
-    <ClInclude Include="AnalyserUI\Viewers\ScreenViewer.h" />
-    <ClInclude Include="AnalyserUI\Viewers\ViewerBase.h" />
+    <ClInclude Include="..\..\imgui\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="..\..\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="..\..\imgui\imconfig.h" />
+    <ClInclude Include="..\..\imgui\imgui.h" />
+    <ClInclude Include="..\..\imgui\imgui_internal.h" />
+    <ClInclude Include="..\..\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\..\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\..\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnalyserUI\AnalyserUI.cpp" />
-    <ClCompile Include="AnalyserUI\ImguiRenderer_Win32_DX11.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\CallstackViewer.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\CodeAnalysisViewer.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\GlobalsViewer.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\RegistersViewer.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\ScreenViewer.cpp" />
-    <ClCompile Include="AnalyserUI\Viewers\ViewerBase.cpp" />
+    <ClCompile Include="..\..\imgui\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\..\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\..\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.txt" />

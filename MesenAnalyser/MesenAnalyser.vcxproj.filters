@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="sources">
-      <UniqueIdentifier>{08e36723-ce4f-4cff-9662-c40801cf1acf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="imgui">
-      <UniqueIdentifier>{bd9fdb42-5c1e-42d3-bcae-660be0390c97}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="imgui\backends">
-      <UniqueIdentifier>{98175e7c-b680-4467-9595-f98c8514af3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="imgui\misc">
-      <UniqueIdentifier>{c54ca913-5eaa-4f15-8b19-a66079b78783}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AnalyserUI">
       <UniqueIdentifier>{cdc486cf-8bdb-4100-8141-07e7ed77108c}</UniqueIdentifier>
     </Filter>
@@ -22,35 +10,8 @@
     <Filter Include="AnalyserUI\ImGuiSupport">
       <UniqueIdentifier>{ac7ac1b5-eb11-4301-9176-3f4ef2b97674}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AnalyserUI\ImGuiSupport\Windows">
-      <UniqueIdentifier>{491a1cc8-889b-4722-87bb-38759e98441e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\backends\imgui_impl_dx11.h">
-      <Filter>imgui\backends</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\backends\imgui_impl_win32.h">
-      <Filter>imgui\backends</Filter>
-    </ClInclude>
     <ClInclude Include="AnalyserUI\AnalyserUI.h">
       <Filter>AnalyserUI</Filter>
     </ClInclude>
@@ -86,33 +47,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_tables.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>imgui\backends</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\misc\cpp\imgui_stdlib.cpp">
-      <Filter>imgui\misc</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
-      <Filter>imgui\backends</Filter>
-    </ClCompile>
     <ClCompile Include="AnalyserUI\AnalyserUI.cpp">
       <Filter>AnalyserUI</Filter>
     </ClCompile>
@@ -136,9 +70,6 @@
     </ClCompile>
     <ClCompile Include="AnalyserUI\Viewers\ScreenViewer.cpp">
       <Filter>AnalyserUI\Viewers</Filter>
-    </ClCompile>
-    <ClCompile Include="AnalyserUI\ImGuiSupport\Windows\ImGuiTexture_DX11.cpp">
-      <Filter>AnalyserUI\ImGuiSupport\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@
 *.sln.docstates
 .vs/*
 MesenAnalyser/.vs/*
+MesenAnalyser/Platforms/Windows/.vs/*
+MesenAnalyser/Platforms/Glfw/.vs/*
 
 # Build results
 

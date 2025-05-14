@@ -25,6 +25,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "Lua\Lua.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SevenZip", "SevenZip\SevenZip.vcxproj", "{52C4BA3A-E699-4305-B23F-C9083FD07AB6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowsExecutable", "MesenAnalyser\Platforms\Windows\Executable.vcxproj", "{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9F316E83-5AE5-4939-A723-305A94F48005} = {9F316E83-5AE5-4939-A723-305A94F48005}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -73,6 +78,14 @@ Global
 		{52C4BA3A-E699-4305-B23F-C9083FD07AB6}.Release|Win32.Build.0 = Release|x64
 		{52C4BA3A-E699-4305-B23F-C9083FD07AB6}.Release|x64.ActiveCfg = Release|x64
 		{52C4BA3A-E699-4305-B23F-C9083FD07AB6}.Release|x64.Build.0 = Release|x64
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Debug|Win32.Build.0 = Debug|Win32
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Debug|x64.ActiveCfg = Debug|x64
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Debug|x64.Build.0 = Debug|x64
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Release|Win32.ActiveCfg = Release|Win32
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Release|Win32.Build.0 = Release|Win32
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Release|x64.ActiveCfg = Release|x64
+		{D91ED6AC-ADB7-4F00-8EC9-48325EF9BE1B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
