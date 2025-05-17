@@ -7,6 +7,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{28a51eaa-76e7-49d8-a20e-556500792d0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGuiSupport">
+      <UniqueIdentifier>{b2e047c2-602a-4dc0-a136-0906fa5238f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\imgui\imconfig.h">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="..\..\imgui\backends\imgui_impl_win32.cpp">
       <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiSupport\ImGuiTexture_DX11.cpp">
+      <Filter>ImGuiSupport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,9 @@
 #include "backends/imgui_impl_dx11.h"
 #include "imgui.h"
 
+// todo move this into the Windows project in Mesen?
+// MesenAnalyser project is supposed to be platform agnostic
+
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 UINT g_ResizeWidth = 0;

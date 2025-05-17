@@ -25,6 +25,15 @@ static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView*  g_mainRenderTargetView = nullptr;
 
+ID3D11Device* GetD3dDevice()
+{
+	return g_pd3dDevice;
+}
+ID3D11DeviceContext* GetD3dDeviceContext()
+{
+	return g_pd3dDeviceContext;
+}
+
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
