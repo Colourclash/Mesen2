@@ -45,6 +45,9 @@
     <ClInclude Include="AnalyserUI\ImGuiSupport\ImGuiTexture.h">
       <Filter>AnalyserUI\ImGuiSupport</Filter>
     </ClInclude>
+    <ClInclude Include="AnalyserUI\ScreenRenderer.h">
+      <Filter>AnalyserUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnalyserUI\AnalyserUI.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="AnalyserUI\Viewers\ScreenViewer.cpp">
       <Filter>AnalyserUI\Viewers</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalyserUI\ScreenRenderer.cpp">
+      <Filter>AnalyserUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

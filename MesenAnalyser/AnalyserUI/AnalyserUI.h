@@ -10,6 +10,7 @@ class Emulator;
 class ViewerBase;
 class GlobalsViewer;
 class CodeAnalysisViewer;
+class ScreenViewer;
 
 // Todo:
 // - 
@@ -23,6 +24,7 @@ private:
 	bool _bShowImPlotDemo = false;
 
 	CodeAnalysisViewer* _pCodeViewer = nullptr;
+	ScreenViewer* _pScreenViewer = nullptr;
 
 	std::vector<ViewerBase*> _viewers;
 
@@ -56,7 +58,8 @@ public:
 
 	void Reset();
 
-	CodeAnalysisViewer* GetCodeView() const {	return _pCodeViewer;	}
+	CodeAnalysisViewer* GetCodeView() const { return _pCodeViewer; }
+	ScreenViewer* GetScreenView() const {	return _pScreenViewer;	}
 
 	ConsoleType GetConsoleType() const { return _consoleType; }
 	CpuType GetCpuType() const { return _cpuType; }

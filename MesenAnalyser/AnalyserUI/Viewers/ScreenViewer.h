@@ -11,10 +11,19 @@ public:
 	void	Shutdown(void) override;
 	void	DrawUI() override;
 
+	void SetFrameData(uint32_t* pBuffer, uint32_t width, uint32_t height);
+
 private:
-	uint32_t* FrameBuffer;	// pixel buffer to store emu output
-	ImTextureID		ScreenTexture;		// texture
-	size_t FrameBufferWidth = 0;
-	size_t FrameBufferHeight = 0;
+	void ResizeFrameBuffer(int width, int height);
+	void DestroyFrameBuffer();
+
+private:
+	uint32_t* FrameBuffer = nullptr;	// pixel buffer to store emu output
+	ImTextureID		ScreenTexture = 0;		// texture
+	
+	uint32_t FrameBufferWidth = 0;
+	uint32_t FrameBufferHeight = 0;
+	uint32_t ScreenWidth = 0;
+	uint32_t ScreenHeight = 0;
 };
 

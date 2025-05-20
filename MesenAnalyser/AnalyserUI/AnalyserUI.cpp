@@ -24,7 +24,9 @@ AnalyserUI::AnalyserUI(Emulator* emu)
 	AddViewer(new GlobalsViewer(_pEmu, this));
 	AddViewer(new RegistersViewer(_pEmu, this));
 	AddViewer(new CallstackViewer(_pEmu, this));
-	AddViewer(new ScreenViewer(_pEmu, this));
+	
+	_pScreenViewer = new ScreenViewer(_pEmu, this);
+	AddViewer(_pScreenViewer);
 
 	_sharedSelf.reset(this);
 }
