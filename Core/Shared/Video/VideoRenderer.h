@@ -70,6 +70,8 @@ public:
 	VideoRenderer(Emulator* emu);
 	~VideoRenderer();
 
+	SystemHud* GetSystemHud() const { return _systemHud.get(); }
+
 	FrameInfo GetRendererSize();
 	void SetRendererSize(uint32_t width, uint32_t height);
 	

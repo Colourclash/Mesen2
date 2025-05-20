@@ -7,6 +7,7 @@
 #include "../ImGuiSupport/ImGuiTexture.h"
 #include "Core/Shared/Emulator.h"
 #include "Core/Shared/Video/VideoRenderer.h"
+#include "Core/Shared/Video/SystemHud.h"
 
 CRITICAL_SECTION gScreenViewerFrameBufferCS;
 
@@ -118,6 +119,8 @@ void ScreenViewer::DrawUI()
 	}
 #endif
 	
+	ImGui::Text("FPS %u", _pEmu->GetVideoRenderer()->GetSystemHud()->GetFps());
+
 	EnterCriticalSection(&gScreenViewerFrameBufferCS);
 
 	ImGui_UpdateTextureRGBA(ScreenTexture, FrameBuffer);

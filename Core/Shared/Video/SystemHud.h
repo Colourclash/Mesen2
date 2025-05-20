@@ -46,6 +46,8 @@ private:
 public:
 	SystemHud(Emulator* emu);
 	~SystemHud();
+	
+	uint32_t GetFps() const { return _currentFPS; }
 
 	void Draw(DebugHud* hud, uint32_t width, uint32_t height) const;
 	void UpdateHud();
