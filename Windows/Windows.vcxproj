@@ -199,13 +199,7 @@
     <ClInclude Include="Common.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\AnalyserUI.cpp" />
     <ClCompile Include="..\MesenAnalyser\AnalyserUI\ImguiRenderer_Win32_DX11.cpp" />
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\CallstackViewer.cpp" />
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\CodeAnalysisViewer.cpp" />
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\GlobalsViewer.cpp" />
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\RegistersViewer.cpp" />
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\ViewerBase.cpp" />
     <ClCompile Include="..\MesenAnalyser\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\MesenAnalyser\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\MesenAnalyser\imgui\imgui.cpp" />
@@ -214,6 +208,7 @@
     <ClCompile Include="..\MesenAnalyser\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\MesenAnalyser\imgui\imgui_widgets.cpp" />
     <ClCompile Include="..\MesenAnalyser\imgui\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="..\MesenAnalyser\Platforms\Windows\ImGuiSupport\ImGuiTexture_DX11.cpp" />
     <ClCompile Include="DirectInputManager.cpp" />
     <ClCompile Include="DirectXTK\BufferHelpers.cpp" />
     <ClCompile Include="DirectXTK\CommonStates.cpp" />

@@ -12,9 +12,6 @@
     <Filter Include="Source Files\AnalyserUI">
       <UniqueIdentifier>{cfad1261-ec6b-4ee2-84a2-acbcafcba004}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\AnalyserUI\Viewers">
-      <UniqueIdentifier>{ef23d036-725b-4878-a270-fdb98d66c486}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{fba8d830-e230-48d4-b06c-597a0fc021fe}</UniqueIdentifier>
     </Filter>
@@ -163,23 +160,8 @@
     <ClCompile Include="..\MesenAnalyser\AnalyserUI\ImguiRenderer_Win32_DX11.cpp">
       <Filter>Source Files\AnalyserUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\AnalyserUI.cpp">
+    <ClCompile Include="..\MesenAnalyser\Platforms\Windows\ImGuiSupport\ImGuiTexture_DX11.cpp">
       <Filter>Source Files\AnalyserUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\CallstackViewer.cpp">
-      <Filter>Source Files\AnalyserUI\Viewers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\CodeAnalysisViewer.cpp">
-      <Filter>Source Files\AnalyserUI\Viewers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\GlobalsViewer.cpp">
-      <Filter>Source Files\AnalyserUI\Viewers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\RegistersViewer.cpp">
-      <Filter>Source Files\AnalyserUI\Viewers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\MesenAnalyser\AnalyserUI\Viewers\ViewerBase.cpp">
-      <Filter>Source Files\AnalyserUI\Viewers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
