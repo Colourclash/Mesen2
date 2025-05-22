@@ -13,6 +13,7 @@ public:
 	void	DrawUI() override;
 
 private:
+	bool _bShowCallstackWhenRunning = false;
 	StackFrameInfo* _callstack = nullptr;
 };
 

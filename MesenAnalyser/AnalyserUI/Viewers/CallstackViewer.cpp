@@ -25,15 +25,22 @@ void CallstackViewer::Shutdown(void)
 
 void CallstackViewer::DrawUI() 
 {
-	const CpuType cpuType = _pAnalyserUI->GetCpuType();	
+	ImGui::Checkbox("Show when running (causes random debug breaks)", &_bShowCallstackWhenRunning);
 
+	const CpuType cpuType = _pAnalyserUI->GetCpuType();	
 	static int selected = 0;
 	DebuggerRequest req = _pEmu->GetDebugger(true);
 	Debugger* pDbg = req.GetDebugger();
-	if(pDbg) {
+	if (pDbg) {
+		if (!_bShowCallstackWhenRunning && !pDbg->IsExecutionStopped())
+		{
+			// something in the following code causes debug breaks to happen randomly.
+			// possibly related to the DebugBreakHelper in GetCallstack()?
+			return;
+		}
+
 		uint32_t callstackSize = 0;
 		pDbg->GetCallstackManager(cpuType)->GetCallstack(_callstack, callstackSize);
-		
 		char txt[256];
 		
 		// Top of stack
